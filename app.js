@@ -326,18 +326,22 @@ function sendEmail() {
     });
     emailBody += `%0D%0A`;
     
-    // Ride preferences
+    // Ride preferences - only list checked rides
     emailBody += `MUST-RIDE ATTRACTIONS:%0D%0A`;
     emailBody += `----------------------------------------%0D%0A`;
+    let hasRides = false;
     if (prefs.rides && prefs.rides.length > 0) {
         prefs.rides.forEach(ride => {
             emailBody += `- ${ride}%0D%0A`;
+            hasRides = true;
         });
-    } else {
-        emailBody += `(None selected)%0D%0A`;
     }
-    if (prefs.otherRide) {
-        emailBody += `- Other: ${prefs.otherRide}%0D%0A`;
+    if (prefs.otherRide && prefs.otherRide.trim() !== '') {
+        emailBody += `- ${prefs.otherRide}%0D%0A`;
+        hasRides = true;
+    }
+    if (!hasRides) {
+        emailBody += `No choice made%0D%0A`;
     }
     emailBody += `%0D%0A`;
     
@@ -349,11 +353,11 @@ function sendEmail() {
     } else if (prefs.arrival === 'late') {
         emailBody += `After dinner (separate meal)%0D%0A`;
     } else {
-        emailBody += `(Not specified)%0D%0A`;
+        emailBody += `No choice made%0D%0A`;
     }
     emailBody += `%0D%0A`;
     
-    // Dinner preference
+    // Dinner preference (only if arriving early)
     if (prefs.arrival === 'early') {
         emailBody += `DINNER DESTINATION:%0D%0A`;
         emailBody += `----------------------------------------%0D%0A`;
@@ -366,8 +370,12 @@ function sendEmail() {
             'flexible': 'Figure it out when we get there',
             'own': 'Bring your own'
         };
-        emailBody += `${dinnerOptions[prefs.dinner] || '(Not specified)'}%0D%0A`;
-        if (prefs.otherDinner) {
+        if (prefs.dinner) {
+            emailBody += `${dinnerOptions[prefs.dinner]}%0D%0A`;
+        } else {
+            emailBody += `No choice made%0D%0A`;
+        }
+        if (prefs.otherDinner && prefs.otherDinner.trim() !== '') {
             emailBody += `Other: ${prefs.otherDinner}%0D%0A`;
         }
         emailBody += `%0D%0A`;
@@ -381,7 +389,7 @@ function sendEmail() {
     } else if (prefs.breakfast === 'bring') {
         emailBody += `Bring/make our own%0D%0A`;
     } else {
-        emailBody += `(Not specified)%0D%0A`;
+        emailBody += `No choice made%0D%0A`;
     }
     emailBody += `%0D%0A`;
     

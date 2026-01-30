@@ -1,10 +1,10 @@
 // Data
 const agents = [
-    { id: 'karkian', name: 'Dr. Karkian', location: 'Jacksonville, FL' },
-    { id: 'moose', name: 'Moose', location: 'San Fernandina Beach, FL' },
-    { id: 'tbone', name: 'T-Bone', location: 'Washington DC' },
-    { id: 'manishbee', name: 'Manishbee', location: 'Gainesville, FL' },
-    { id: 'superswiss', name: 'SuperSwiss', location: 'Orlando, FL' },
+    { id: 'karkian', name: 'Dr. Karkian', location: 'Jacksonville, FL', image: 'drkarkian_1.png' },
+    { id: 'moose', name: 'Moose', location: 'San Fernandina Beach, FL', image: 'moose_1.png' },
+    { id: 'tbone', name: 'T-Bone', location: 'Washington DC', image: 'tbone_1.png' },
+    { id: 'manishbee', name: 'Manishbee', location: 'Gainesville, FL', image: 'manish_1.png' },
+    { id: 'superswiss', name: 'SuperSwiss', location: 'Orlando, FL', image: 'superswiss.png' },
 ];
 
 const missions = [
@@ -124,7 +124,9 @@ function renderAgentGrid() {
     const grid = document.getElementById('agent-grid');
     grid.innerHTML = agents.map(agent => `
         <div class="agent-card" onclick="selectAgent('${agent.id}')">
-            <div class="agent-photo">📋</div>
+            <div class="agent-photo">
+                <img src="${agent.image}" alt="${agent.name}" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
             <div class="agent-name">${agent.name}</div>
             <div class="agent-location">${agent.location}</div>
         </div>
@@ -151,6 +153,10 @@ function selectAgent(agentId) {
     
     document.getElementById('agent-name').textContent = agent.name;
     document.getElementById('agent-location').textContent = agent.location;
+    
+    // Update profile photo in dossier
+    const profilePhoto = document.querySelector('.profile-photo');
+    profilePhoto.innerHTML = `<img src="${agent.image}" alt="${agent.name}" style="width: 100%; height: 100%; object-fit: cover;">`;
     
     renderMissionChecklist();
     renderArrivalChecklist();

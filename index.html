@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operation: Epic Universe - Mission Brief</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #D4C5B0;
+            color: #3E2723;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #E8D4B8;
+            border-bottom: 4px solid #8B4513;
+            padding: 30px 20px;
+            box-shadow: 0 4px 0 rgba(139, 69, 19, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .classified-tag {
+            font-size: 11px;
+            font-weight: bold;
+            color: #8B4513;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: 900;
+            color: #5D4037;
+            margin: 0 0 5px 0;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #8B4513;
+            font-weight: bold;
+        }
+
+        .classified-stamp {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 14px;
+            font-weight: 900;
+            color: #C62828;
+            transform: rotate(-15deg);
+            border: 2px solid #C62828;
+            padding: 5px 10px;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: #8B4513;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .red-line {
+            width: 60px;
+            height: 4px;
+            background-color: #C62828;
+            margin-bottom: 30px;
+        }
+
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .agent-card {
+            background-color: #E8DCC8;
+            border: 3px solid #8B4513;
+            padding: 20px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            box-shadow: 4px 4px 0 rgba(139, 69, 19, 0.2);
+        }
+
+        .agent-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 6px 6px 0 rgba(139, 69, 19, 0.3);
+        }
+
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 25px;
+            background-color: #C9BCA7;
+            border-left: 3px solid #8B4513;
+            border-bottom: 3px solid #8B4513;
+        }
+
+        .agent-photo {
+            width: 100%;
+            height: 100px;
+            background-color: #D3D3D3;
+            border: 2px solid #999;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .agent-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #5D4037;
+            margin-bottom: 5px;
+        }
+
+        .agent-location {
+            font-size: 11px;
+            color: #8B4513;
+        }
+
+        .timeline-box {
+            background-color: #F5F0E8;
+            border: 3px solid #8B4513;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 3px 3px 0 rgba(139, 69, 19, 0.15);
+        }
+
+        .timeline-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #8B4513;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .timeline {
+            border-left: 4px solid #C62828;
+            padding-left: 20px;
+        }
+
+        .timeline-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #C9BCA7;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .timeline-phase {
+            font-size: 11px;
+            font-weight: 900;
+            color: #8B4513;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .timeline-phase.main {
+            color: #C62828;
+        }
+
+        .timeline-desc {
+            font-size: 12px;
+            color: #5D4037;
+            line-height: 1.5;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .resource-card {
+            background-color: #F5F0E8;
+            border: 2px solid #8B4513;
+            padding: 15px;
+            box-shadow: 2px 2px 0 rgba(139, 69, 19, 0.1);
+        }
+
+        .resource-name {
+            font-weight: bold;
+            font-size: 13px;
+            color: #5D4037;
+            margin-bottom: 10px;
+        }
+
+        .resource-button {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: #8B4513;
+            color: #F5F0E8;
+            border: 2px solid #5D4037;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.2s;
+        }
+
+        .resource-button:hover {
+            background-color: #5D4037;
+        }
+
+        .back-button {
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid #8B4513;
+            color: #8B4513;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        .agent-header {
+            background-color: #F5F0E8;
+            border: 4px solid #8B4513;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 6px 6px 0 rgba(139, 69, 19, 0.2);
+            position: relative;
+        }
+
+        .top-secret {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            border: 3px solid #C62828;
+            padding: 5px 10px;
+            font-size: 10px;
+            font-weight: 900;
+            color: #C62828;
+            transform: rotate(45deg);
+            letter-spacing: 1px;
+        }
+
+        .agent-profile {
+            display: flex;
+            gap: 20px;
+        }
+
+        .profile-photo {
+            width: 100px;
+            height: 130px;
+            background-color: #D3D3D3;
+            border: 3px solid #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            flex-shrink: 0;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .dossier-label {
+            font-size: 10px;
+            color: #C62828;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .profile-name {
+            font-size: 28px;
+            font-weight: 900;
+            color: #5D4037;
+            margin-bottom: 10px;
+        }
+
+        .profile-location {
+            font-size: 12px;
+            color: #8B4513;
+            margin-bottom: 15px;
+        }
+
+        .profile-details {
+            border-top: 2px solid #C9BCA7;
+            padding-top: 10px;
+            font-size: 11px;
+            color: #8B4513;
+        }
+
+        .profile-details div {
+            margin-bottom: 5px;
+        }
+
+        .checklist {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background-color: #F5F0E8;
+            border: 2px solid #8B4513;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 2px 2px 0 rgba(139, 69, 19, 0.1);
+        }
+
+        .checklist-item.completed {
+            background-color: #E8D4C0;
+        }
+
+        .checklist-icon {
+            font-size: 24px;
+        }
+
+        .checklist-label {
+            flex: 1;
+            font-weight: bold;
+            font-size: 13px;
+            color: #5D4037;
+        }
+
+        .checklist-item.completed .checklist-label {
+            text-decoration: line-through;
+            color: #8B4513;
+        }
+
+        .checklist-check {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .checklist-item.completed .checklist-check {
+            color: #C62828;
+        }
+
+        .checklist-item:not(.completed) .checklist-check {
+            color: #C9BCA7;
+        }
+
+        .preference-box {
+            background-color: #F5F0E8;
+            border: 3px solid #8B4513;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 3px 3px 0 rgba(139, 69, 19, 0.15);
+        }
+
+        .preference-title {
+            font-size: 14px;
+            font-weight: 900;
+            color: #8B4513;
+            margin-bottom: 12px;
+        }
+
+        .rides-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .ride-option {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background-color: #FFFFFF;
+            border: 1px solid #C9BCA7;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .ride-name {
+            font-weight: bold;
+            color: #5D4037;
+        }
+
+        .ride-zone {
+            color: #8B4513;
+            font-size: 9px;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #8B4513;
+            background-color: #FFFFFF;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #5D4037;
+        }
+
+        .radio-option {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            color: #5D4037;
+        }
+
+        .status-box {
+            background-color: #FFE4E1;
+            border: 3px solid #8B4513;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .status-icon {
+            color: #C62828;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .status-text {
+            font-size: 11px;
+            color: #5D4037;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 24px;
+            }
+
+            .classified-stamp {
+                font-size: 10px;
+                top: 10px;
+                right: 10px;
+            }
+
+            .agent-profile {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-content">
+            <div class="classified-tag">⬤ CLASSIFIED - EYES ONLY ⬤</div>
+            <h1 class="main-title">OPERATION: EPIC UNIVERSE</h1>
+            <div class="subtitle">Mission Briefing • 31 JAN - 2 FEB 2026</div>
+            <div class="classified-stamp">CLASSIFIED</div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <!-- AGENT SELECTION VIEW -->
+        <div id="selection-view">
+            <h2 class="section-title">SELECT OPERATIVE DOSSIER</h2>
+            <div class="red-line"></div>
+
+            <div class="agent-grid" id="agent-grid"></div>
+
+            <!-- MISSION TIMELINE -->
+            <div class="timeline-box">
+                <h2 class="timeline-title">MISSION TIMELINE</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-phase">PHASE 1: PRE-DEPLOYMENT</div>
+                        <div class="timeline-desc">Complete mission prep. Download app, acquire tickets, prepare preferences.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-phase">PHASE 2: ARRIVAL (SAT 31 JAN)</div>
+                        <div class="timeline-desc">Hotel check-in 4pm. Secure room key. Strategic dining.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-phase main">⬤ PHASE 3: MAIN OPERATION (SUN 1 FEB) ⬤</div>
+                        <div class="timeline-desc">Early entry 9am. Execute ride strategy. Shuttle 8am.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-phase">PHASE 4: EXTRACTION (MON 2 FEB)</div>
+                        <div class="timeline-desc">Mission debrief. Departure TBD.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESOURCES -->
+            <div>
+                <h2 class="timeline-title">CRITICAL INTEL</h2>
+                <div class="resources-grid" id="resources-grid"></div>
+            </div>
+        </div>
+
+        <!-- AGENT DOSSIER VIEW -->
+        <div id="dossier-view" class="hidden">
+            <button class="back-button" onclick="closeAgent()">← CLOSE DOSSIER</button>
+
+            <div class="agent-header">
+                <div class="top-secret">TOP SECRET</div>
+                <div class="agent-profile">
+                    <div class="profile-photo">📸</div>
+                    <div class="profile-info">
+                        <div class="dossier-label">OPERATIVE DOSSIER</div>
+                        <div class="profile-name" id="agent-name"></div>
+                        <div class="profile-location" id="agent-location"></div>
+                        <div class="profile-details">
+                            <div><strong>STATUS:</strong> ACTIVE</div>
+                            <div><strong>CLEARANCE:</strong> LEVEL 5</div>
+                            <div><strong>ASSIGNMENT:</strong> OPERATION EPIC UNIVERSE</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <h2 class="timeline-title">PRE-DEPLOYMENT MISSION CHECKLIST</h2>
+                <div class="checklist" id="mission-checklist"></div>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <h2 class="timeline-title">ARRIVAL CHECKLIST (SATURDAY)</h2>
+                <div class="checklist" id="arrival-checklist"></div>
+            </div>
+
+            <div>
+                <h2 class="timeline-title">OPERATIVE PREFERENCES PROFILE</h2>
+                
+                <div class="preference-box">
+                    <h3 class="preference-title">⚡ MUST-RIDE ATTRACTIONS</h3>
+                    <div class="rides-grid" id="rides-grid"></div>
+                    <input type="text" class="text-input" id="other-ride" placeholder="Other attraction...">
+                </div>
+
+                <div class="preference-box">
+                    <h3 class="preference-title">ARRIVAL WINDOW (SATURDAY)</h3>
+                    <label class="radio-option">
+                        <input type="radio" name="arrival" value="early">
+                        <span>By 5pm (dinner with group)</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="arrival" value="late">
+                        <span>After dinner (separate meal)</span>
+                    </label>
+                </div>
+
+                <div class="preference-box" id="dinner-box" style="display: none;">
+                    <h3 class="preference-title">DINNER DESTINATION</h3>
+                    <label class="radio-option">
+                        <input type="radio" name="dinner" value="texas">
+                        <span>Texas de Brazil - $70</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="dinner" value="millers">
+                        <span>Miller's Ale House - $30</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="dinner" value="seasons">
+                        <span>Season's 52</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="dinner" value="hotel">
+                        <span>Hotel - $20</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="dinner" value="noodles">
+                        <span>Noodles and Co</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="dinner" value="flexible">
+                        <span>Figure it out when we get there</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="dinner" value="own">
+                        <span>Bring your own</span>
+                    </label>
+                    <input type="text" class="text-input" id="other-dinner" placeholder="Other restaurant..." style="margin-top: 10px;">
+                </div>
+
+                <div class="preference-box">
+                    <h3 class="preference-title">SUNDAY BREAKFAST</h3>
+                    <label class="radio-option">
+                        <input type="radio" name="breakfast" value="hotel">
+                        <span>Eat at hotel restaurant</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="breakfast" value="bring">
+                        <span>Bring/make our own</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="status-box">
+                <div class="status-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div class="status-text">
+                    <strong>PROFILE STATUS:</strong> Your preferences are saved locally in your browser. Share this link with your operatives.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

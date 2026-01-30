@@ -289,5 +289,113 @@ function toggleRide(rideName) {
     saveData();
 }
 
+// Send email with preferences
+function sendEmail() {
+    if (!currentAgent) {
+        alert('Please select an operative first!');
+        return;
+    }
+    
+    const agent = agents.find(a => a.id === currentAgent);
+    const prefs = data.preferences[currentAgent] || {};
+    
+    // Build email body
+    let emailBody = `OPERATION: EPIC UNIVERSE - MISSION BRIEF%0D%0A`;
+    emailBody += `========================================%0D%0A%0D%0A`;
+    emailBody += `OPERATIVE: ${agent.name}%0D%0A`;
+    emailBody += `LOCATION: ${agent.location}%0D%0A`;
+    emailBody += `STATUS: PREFERENCES SUBMITTED%0D%0A%0D%0A`;
+    
+    // Pre-deployment missions
+    emailBody += `PRE-DEPLOYMENT CHECKLIST:%0D%0A`;
+    emailBody += `----------------------------------------%0D%0A`;
+    missions.forEach(mission => {
+        const key = `${currentAgent}-${mission.id}`;
+        const completed = data.completedMissions[key] ? '[X]' : '[ ]';
+        emailBody += `${completed} ${mission.label}%0D%0A`;
+    });
+    emailBody += `%0D%0A`;
+    
+    // Arrival checklist
+    emailBody += `ARRIVAL CHECKLIST (SATURDAY):%0D%0A`;
+    emailBody += `----------------------------------------%0D%0A`;
+    arrivalItems.forEach(item => {
+        const key = `${currentAgent}-${item.id}`;
+        const completed = data.arrivalChecklist[key] ? '[X]' : '[ ]';
+        emailBody += `${completed} ${item.label}%0D%0A`;
+    });
+    emailBody += `%0D%0A`;
+    
+    // Ride preferences
+    emailBody += `MUST-RIDE ATTRACTIONS:%0D%0A`;
+    emailBody += `----------------------------------------%0D%0A`;
+    if (prefs.rides && prefs.rides.length > 0) {
+        prefs.rides.forEach(ride => {
+            emailBody += `- ${ride}%0D%0A`;
+        });
+    } else {
+        emailBody += `(None selected)%0D%0A`;
+    }
+    if (prefs.otherRide) {
+        emailBody += `- Other: ${prefs.otherRide}%0D%0A`;
+    }
+    emailBody += `%0D%0A`;
+    
+    // Arrival time
+    emailBody += `ARRIVAL WINDOW (SATURDAY):%0D%0A`;
+    emailBody += `----------------------------------------%0D%0A`;
+    if (prefs.arrival === 'early') {
+        emailBody += `By 5pm (dinner with group)%0D%0A`;
+    } else if (prefs.arrival === 'late') {
+        emailBody += `After dinner (separate meal)%0D%0A`;
+    } else {
+        emailBody += `(Not specified)%0D%0A`;
+    }
+    emailBody += `%0D%0A`;
+    
+    // Dinner preference
+    if (prefs.arrival === 'early') {
+        emailBody += `DINNER DESTINATION:%0D%0A`;
+        emailBody += `----------------------------------------%0D%0A`;
+        const dinnerOptions = {
+            'texas': 'Texas de Brazil - $70',
+            'millers': "Miller's Ale House - $30",
+            'seasons': "Season's 52",
+            'hotel': 'Hotel - $20',
+            'noodles': 'Noodles and Co',
+            'flexible': 'Figure it out when we get there',
+            'own': 'Bring your own'
+        };
+        emailBody += `${dinnerOptions[prefs.dinner] || '(Not specified)'}%0D%0A`;
+        if (prefs.otherDinner) {
+            emailBody += `Other: ${prefs.otherDinner}%0D%0A`;
+        }
+        emailBody += `%0D%0A`;
+    }
+    
+    // Breakfast preference
+    emailBody += `SUNDAY BREAKFAST:%0D%0A`;
+    emailBody += `----------------------------------------%0D%0A`;
+    if (prefs.breakfast === 'hotel') {
+        emailBody += `Eat at hotel restaurant%0D%0A`;
+    } else if (prefs.breakfast === 'bring') {
+        emailBody += `Bring/make our own%0D%0A`;
+    } else {
+        emailBody += `(Not specified)%0D%0A`;
+    }
+    emailBody += `%0D%0A`;
+    
+    emailBody += `========================================%0D%0A`;
+    emailBody += `END OF MISSION BRIEF%0D%0A`;
+    emailBody += `========================================`;
+    
+    // Create mailto link
+    const subject = `Epic Universe Preferences - ${agent.name}`;
+    const mailtoLink = `mailto:superswiss@gmail.com?subject=${encodeURIComponent(subject)}&body=${emailBody}`;
+    
+    // Open email client
+    window.location.href = mailtoLink;
+}
+
 // Initialize on load
 document.addEventListener('DOMContentLoaded', init);

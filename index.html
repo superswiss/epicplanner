@@ -639,7 +639,7 @@
                 </div>
             </div>
 
-            <div class="status-box">
+            <div class="status-box" style="margin-bottom: 15px;">
                 <div class="status-icon">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"></circle>
@@ -648,9 +648,26 @@
                     </svg>
                 </div>
                 <div class="status-text">
-                    <strong>PROFILE STATUS:</strong> Your preferences are saved locally in your browser. Share this link with your operatives.
+                    <strong>PROFILE STATUS:</strong> Your preferences are saved locally in your browser. Click below to submit via email.
                 </div>
             </div>
+
+            <button onclick="sendEmail()" style="
+                width: 100%;
+                padding: 15px;
+                background-color: #8B4513;
+                color: #F5F0E8;
+                border: 3px solid #5D4037;
+                font-weight: bold;
+                font-size: 14px;
+                cursor: pointer;
+                font-family: 'Courier New', monospace;
+                letter-spacing: 1px;
+                transition: all 0.2s;
+                box-shadow: 3px 3px 0 rgba(139, 69, 19, 0.3);
+            " onmouseover="this.style.backgroundColor='#5D4037'; this.style.transform='translateY(-2px)'; this.style.boxShadow='4px 4px 0 rgba(139, 69, 19, 0.4)';" onmouseout="this.style.backgroundColor='#8B4513'; this.style.transform='none'; this.style.boxShadow='3px 3px 0 rgba(139, 69, 19, 0.3)';">
+                📧 SUBMIT PREFERENCES VIA EMAIL
+            </button>
         </div>
     </div>
 

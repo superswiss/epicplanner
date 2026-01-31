@@ -421,6 +421,7 @@ function copyEmailToClipboard() {
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(fullEmail).then(() => {
             alert('✅ Email copied to clipboard!\n\nYou can now paste it into your email app.');
+            closeEmailPreview();
         }).catch(() => {
             // Fallback for older browsers
             fallbackCopy(fullEmail);
@@ -440,6 +441,7 @@ function fallbackCopy(text) {
     try {
         document.execCommand('copy');
         alert('✅ Email copied to clipboard!\n\nYou can now paste it into your email app.');
+        closeEmailPreview();
     } catch (err) {
         alert('❌ Could not copy automatically.\n\nPlease manually copy the text from the preview.');
     }

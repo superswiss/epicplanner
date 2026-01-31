@@ -36,8 +36,8 @@ const rides = [
 ];
 
 const resources = [
-    { name: 'Hotel: Endless Summer Resort - Surfside', detail: '7000 Universal Blvd, Orlando, FL 32819', url: 'https://www.universalorlando.com' },
-    { name: 'Park Info & Map', detail: 'Epic Universe Details', url: 'https://www.universalorlando.com/web/en/us/theme-parks/epic-universe' },
+    { name: 'Hotel: Endless Summer Resort - Surfside', detail: '7000 Universal Blvd, Orlando, FL 32819', url: 'https://www.google.com/maps/dir//7000%20Universal%20Blvd,%20Orlando,%20FL%2032819' },
+    { name: 'Park Info & Map', detail: 'Epic Universe Details', url: 'https://www.universalorlando.com/web/en/us/plan-your-visit/resort-maps/interactive-map.html?mapFilters=uor.venues;uor.usf,uor.venues;uor.ioa,uor.venues;uor.vb,uor.venues;uor.eu,uor.place_types;ride&mapCard=uor.eu' },
     { name: 'Wait Times Tracker', detail: 'Real-Time Status', url: 'https://www.thrill-data.com/waittimes/epic-universe' },
     { name: 'Trip Playlist', detail: 'Spotify Mix', url: 'https://open.spotify.com/playlist/7FIdW1JcJbnDznMXDtP9Px' },
 ];

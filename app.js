@@ -290,6 +290,9 @@ function toggleRide(rideName) {
 }
 
 // Send email with preferences
+let currentEmailBody = '';
+let currentEmailSubject = '';
+
 function sendEmail() {
     if (!currentAgent) {
         alert('Please select an operative first!');
@@ -299,68 +302,68 @@ function sendEmail() {
     const agent = agents.find(a => a.id === currentAgent);
     const prefs = data.preferences[currentAgent] || {};
     
-    // Build email body
-    let emailBody = `OPERATION: EPIC UNIVERSE - MISSION BRIEF%0D%0A`;
-    emailBody += `========================================%0D%0A%0D%0A`;
-    emailBody += `OPERATIVE: ${agent.name}%0D%0A`;
-    emailBody += `LOCATION: ${agent.location}%0D%0A`;
-    emailBody += `STATUS: PREFERENCES SUBMITTED%0D%0A%0D%0A`;
+    // Build email body (plain text for display)
+    let emailBody = `OPERATION: EPIC UNIVERSE - MISSION BRIEF\n`;
+    emailBody += `========================================\n\n`;
+    emailBody += `OPERATIVE: ${agent.name}\n`;
+    emailBody += `LOCATION: ${agent.location}\n`;
+    emailBody += `STATUS: PREFERENCES SUBMITTED\n\n`;
     
     // Pre-deployment missions
-    emailBody += `PRE-DEPLOYMENT CHECKLIST:%0D%0A`;
-    emailBody += `----------------------------------------%0D%0A`;
+    emailBody += `PRE-DEPLOYMENT CHECKLIST:\n`;
+    emailBody += `----------------------------------------\n`;
     missions.forEach(mission => {
         const key = `${currentAgent}-${mission.id}`;
         const completed = data.completedMissions[key] ? '[X]' : '[ ]';
-        emailBody += `${completed} ${mission.label}%0D%0A`;
+        emailBody += `${completed} ${mission.label}\n`;
     });
-    emailBody += `%0D%0A`;
+    emailBody += `\n`;
     
     // Arrival checklist
-    emailBody += `ARRIVAL CHECKLIST (SATURDAY):%0D%0A`;
-    emailBody += `----------------------------------------%0D%0A`;
+    emailBody += `ARRIVAL CHECKLIST (SATURDAY):\n`;
+    emailBody += `----------------------------------------\n`;
     arrivalItems.forEach(item => {
         const key = `${currentAgent}-${item.id}`;
         const completed = data.arrivalChecklist[key] ? '[X]' : '[ ]';
-        emailBody += `${completed} ${item.label}%0D%0A`;
+        emailBody += `${completed} ${item.label}\n`;
     });
-    emailBody += `%0D%0A`;
+    emailBody += `\n`;
     
     // Ride preferences - only list checked rides
-    emailBody += `MUST-RIDE ATTRACTIONS:%0D%0A`;
-    emailBody += `----------------------------------------%0D%0A`;
+    emailBody += `MUST-RIDE ATTRACTIONS:\n`;
+    emailBody += `----------------------------------------\n`;
     let hasRides = false;
     if (prefs.rides && prefs.rides.length > 0) {
         prefs.rides.forEach(ride => {
-            emailBody += `- ${ride}%0D%0A`;
+            emailBody += `- ${ride}\n`;
             hasRides = true;
         });
     }
     if (prefs.otherRide && prefs.otherRide.trim() !== '') {
-        emailBody += `- ${prefs.otherRide}%0D%0A`;
+        emailBody += `- ${prefs.otherRide}\n`;
         hasRides = true;
     }
     if (!hasRides) {
-        emailBody += `No choice made%0D%0A`;
+        emailBody += `No choice made\n`;
     }
-    emailBody += `%0D%0A`;
+    emailBody += `\n`;
     
     // Arrival time
-    emailBody += `ARRIVAL WINDOW (SATURDAY):%0D%0A`;
-    emailBody += `----------------------------------------%0D%0A`;
+    emailBody += `ARRIVAL WINDOW (SATURDAY):\n`;
+    emailBody += `----------------------------------------\n`;
     if (prefs.arrival === 'early') {
-        emailBody += `By 5pm (dinner with group)%0D%0A`;
+        emailBody += `By 5pm (dinner with group)\n`;
     } else if (prefs.arrival === 'late') {
-        emailBody += `After dinner (separate meal)%0D%0A`;
+        emailBody += `After dinner (separate meal)\n`;
     } else {
-        emailBody += `No choice made%0D%0A`;
+        emailBody += `No choice made\n`;
     }
-    emailBody += `%0D%0A`;
+    emailBody += `\n`;
     
     // Dinner preference (only if arriving early)
     if (prefs.arrival === 'early') {
-        emailBody += `DINNER DESTINATION:%0D%0A`;
-        emailBody += `----------------------------------------%0D%0A`;
+        emailBody += `DINNER DESTINATION:\n`;
+        emailBody += `----------------------------------------\n`;
         const dinnerOptions = {
             'texas': 'Texas de Brazil - $70',
             'millers': "Miller's Ale House - $30",
@@ -371,38 +374,96 @@ function sendEmail() {
             'own': 'Bring your own'
         };
         if (prefs.dinner) {
-            emailBody += `${dinnerOptions[prefs.dinner]}%0D%0A`;
+            emailBody += `${dinnerOptions[prefs.dinner]}\n`;
         } else {
-            emailBody += `No choice made%0D%0A`;
+            emailBody += `No choice made\n`;
         }
         if (prefs.otherDinner && prefs.otherDinner.trim() !== '') {
-            emailBody += `Other: ${prefs.otherDinner}%0D%0A`;
+            emailBody += `Other: ${prefs.otherDinner}\n`;
         }
-        emailBody += `%0D%0A`;
+        emailBody += `\n`;
     }
     
     // Breakfast preference
-    emailBody += `SUNDAY BREAKFAST:%0D%0A`;
-    emailBody += `----------------------------------------%0D%0A`;
+    emailBody += `SUNDAY BREAKFAST:\n`;
+    emailBody += `----------------------------------------\n`;
     if (prefs.breakfast === 'hotel') {
-        emailBody += `Eat at hotel restaurant%0D%0A`;
+        emailBody += `Eat at hotel restaurant\n`;
     } else if (prefs.breakfast === 'bring') {
-        emailBody += `Bring/make our own%0D%0A`;
+        emailBody += `Bring/make our own\n`;
     } else {
-        emailBody += `No choice made%0D%0A`;
+        emailBody += `No choice made\n`;
     }
-    emailBody += `%0D%0A`;
+    emailBody += `\n`;
     
-    emailBody += `========================================%0D%0A`;
-    emailBody += `END OF MISSION BRIEF%0D%0A`;
+    emailBody += `========================================\n`;
+    emailBody += `END OF MISSION BRIEF\n`;
     emailBody += `========================================`;
     
-    // Create mailto link
-    const subject = `Epic Universe Preferences - ${agent.name}`;
-    const mailtoLink = `mailto:superswiss@gmail.com?subject=${encodeURIComponent(subject)}&body=${emailBody}`;
+    // Store for later use
+    currentEmailBody = emailBody;
+    currentEmailSubject = `Epic Universe Preferences - ${agent.name}`;
     
-    // Open email client
+    // Show preview modal
+    document.getElementById('email-subject').textContent = currentEmailSubject;
+    document.getElementById('email-body-preview').textContent = emailBody;
+    document.getElementById('email-preview-modal').classList.remove('hidden');
+}
+
+function closeEmailPreview() {
+    document.getElementById('email-preview-modal').classList.add('hidden');
+}
+
+function copyEmailToClipboard() {
+    const fullEmail = `To: superswiss@gmail.com\nSubject: ${currentEmailSubject}\n\n${currentEmailBody}`;
+    
+    // Try to copy to clipboard
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(fullEmail).then(() => {
+            alert('✅ Email copied to clipboard!\n\nYou can now paste it into your email app.');
+        }).catch(() => {
+            // Fallback for older browsers
+            fallbackCopy(fullEmail);
+        });
+    } else {
+        fallbackCopy(fullEmail);
+    }
+}
+
+function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+        alert('✅ Email copied to clipboard!\n\nYou can now paste it into your email app.');
+    } catch (err) {
+        alert('❌ Could not copy automatically.\n\nPlease manually copy the text from the preview.');
+    }
+    document.body.removeChild(textarea);
+}
+
+function openEmailClient() {
+    // Create URL-encoded version for mailto
+    const emailBodyEncoded = currentEmailBody
+        .replace(/\n/g, '%0D%0A')
+        .replace(/\[/g, '%5B')
+        .replace(/\]/g, '%5D');
+    
+    const mailtoLink = `mailto:superswiss@gmail.com?subject=${encodeURIComponent(currentEmailSubject)}&body=${emailBodyEncoded}`;
+    
+    // Try to open email client
     window.location.href = mailtoLink;
+    
+    // Show a message that it might not work on mobile
+    setTimeout(() => {
+        if (confirm('Email app opened?\n\nIf the email body is blank, use "COPY TO CLIPBOARD" instead and paste into your email app manually.')) {
+            closeEmailPreview();
+        }
+    }, 1000);
 }
 
 // Initialize on load

@@ -808,7 +808,7 @@
                 </div>
             </div>
 
-            <button onclick="sendEmail()" style="
+            <button onclick="sendEmail();document.getElementById('email-preview-modal').style.display='block';" style="
                 width: 100%;
                 padding: 15px;
                 background-color: #8B4513;
@@ -828,7 +828,7 @@
     </div>
 
     <!-- EMAIL PREVIEW MODAL -->
-    <div id="email-preview-modal" class="email-preview-modal hidden">
+    <div id="email-preview-modal" class="email-preview-modal hidden" style="display: none;">
         <div class="email-preview-box">
             <h3>⚡ TRANSMISSION READY ⚡</h3>
             <div class="email-preview-header">
@@ -844,7 +844,7 @@
                 <button class="email-preview-button" onclick="openEmailClient()">
                     📧 TRANSMIT VIA EMAIL
                 </button>
-                <button class="email-preview-button secondary" onclick="closeEmailPreview()">
+                <button class="email-preview-button secondary" onclick="document.getElementById('email-preview-modal').style.display='none';">
                     ✕ ABORT
                 </button>
             </div>
